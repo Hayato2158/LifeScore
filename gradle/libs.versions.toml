@@ -10,6 +10,7 @@ espressoCore = "3.7.0"
 coreKtx = "1.17.0"
 room = "2.6.1"
 desugar = "2.1.2"
+hilt = "2.57.1" # Hiltのバージョンを追加
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,8 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-room-ktx  = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" } # Hiltライブラリ
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" } # Hiltコンパイラ
 
 
 [plugins]
@@ -39,5 +42,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.25" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" } # Hiltプラグイン
 
 

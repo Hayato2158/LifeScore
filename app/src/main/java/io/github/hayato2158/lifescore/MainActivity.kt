@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint // Hiltのアノテーションをインポート
 import io.github.hayato2158.lifescore.data.ScoreRecord
 import io.github.hayato2158.lifescore.ui.ScoreHomeRoute
 import io.github.hayato2158.lifescore.ui.ScoreHomeScreen
@@ -39,11 +40,11 @@ import io.github.hayato2158.lifescore.ui.theme.LifeScoreTheme
 import kotlinx.coroutines.launch
 import kotlin.getValue
 
+@AndroidEntryPoint // Hiltが依存関係を注入できるようにするアノテーション
 class MainActivity : ComponentActivity() {
 
-    private val vm by viewModels<ScoresViewModel> {
-        ScoresViewModel.factory(application as App)
-    }
+    // Hiltを使用すると、ViewModelの取得方法も変わります。
+    private val vm: ScoresViewModel by viewModels() // Hiltがファクトリを提供
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
