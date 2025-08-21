@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,104 +32,42 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import io.github.hayato2158.lifescore.data.ScoreRecord
+import io.github.hayato2158.lifescore.ui.ScoreHomeRoute
+import io.github.hayato2158.lifescore.ui.ScoreHomeScreen
+import io.github.hayato2158.lifescore.ui.ScoresViewModel
 import io.github.hayato2158.lifescore.ui.theme.LifeScoreTheme
 import kotlinx.coroutines.launch
+import kotlin.getValue
 
 class MainActivity : ComponentActivity() {
 
-    private val repo by lazy { (application as App).repository }
+    private val vm by viewModels<ScoresViewModel> {
+        ScoresViewModel.factory(application as App)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val itemsState = mutableStateOf<List<ScoreRecord>>(emptyList())
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                repo.all().collect { list ->
-                    Log.d("LifeScore", "items=${list.size} ${list}")
-                    itemsState.value = list
-                }
-            }
-        }
-
         setContent {
             MaterialTheme {
                 Surface {
-                    SmokeTestScreen(
-                        items = itemsState.value,
-                        onSave = { score ->
-                            lifecycleScope.launch {
-                                repo.saveToday(score)
-                                Log.d("LifeScore", "saveToday($score) done")
-                            }
-                        }
-                    )
+                    ScoreHomeRoute(viewModel = vm)
                 }
             }
         }
     }
 }
 
-
-
 @Composable
-private fun SmokeTestScreen(
-    items: List<ScoreRecord>,
-    onSave: (Int) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("LifeScore", style = MaterialTheme.typography.titleLarge)
-        Spacer(Modifier.height(12.dp))
-
-        // 1〜5を簡易ボタンで保存
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            (1..5).forEach { s ->
-                Button(onClick = { onSave(s) }) { Text("$s") }
-            }
-        }
-
-        Spacer(Modifier.height(16.dp))
-        Text("Score Log (new → old)")
-
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            items(items) { rec ->
-                ElevatedCard(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(rec.date)
-                        Text("★ ${rec.score}")
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-
-@Preview(showBackground = true, name = "SmokeTest Preview")
-@Composable
-fun PreviewSmokeTestScreen() {
-    LifeScoreTheme {
-        SmokeTestScreen(
-            items = listOf(
-                ScoreRecord(date = "2025-08-21", score = 5),
-                ScoreRecord(date = "2025-08-20", score = 3),
-                ScoreRecord(date = "2025-08-19", score = 4),
-            ),
-            onSave = {} // プレビューなので空でOK
-        )
+@androidx.compose.ui.tooling.preview.Preview(
+    showBackground = true, name = "ScoreHome Preview"
+)
+fun PreviewScoreHome() {
+    val fake = listOf(
+        ScoreRecord("2025-08-21", 5),
+        ScoreRecord("2025-08-20", 3),
+        ScoreRecord("2025-08-19", 4)
+    )
+    MaterialTheme {
+        ScoreHomeScreen(items = fake, onSave = {})
     }
 }
