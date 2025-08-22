@@ -117,16 +117,6 @@ fun ScoreHomeScreen(
                     }
                 }
             }
-
-            // if (showDialog) { // ダイアログ関連削除
-            //     ScoreInputDialog(
-            //         onDismiss = { showDialog = false },
-            //         onSave = { score ->
-            //             onSave(score)
-            //             showDialog = false
-            //         }
-            //     )
-            // }
         }
     }
 }
@@ -190,7 +180,7 @@ fun MonthNavigationAndSummary(
         } else {
             Card(elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) { // サマリがない場合もCardで囲む
                 Text(
-                    "この月のサマリデータはありません。",
+                    "この月のデータはありません。",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(16.dp).fillMaxWidth(), // 中央揃えとパディング
                     textAlign = TextAlign.Center
@@ -215,7 +205,7 @@ fun ScoreRecordItem(record: ScoreRecord, modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = record.date, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${record.score} 点", style = MaterialTheme.typography.headlineSmall)
+            Text(text = "${record.score}", style = MaterialTheme.typography.headlineSmall)
         }
     }
 }

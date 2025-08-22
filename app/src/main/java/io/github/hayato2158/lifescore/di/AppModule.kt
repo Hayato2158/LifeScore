@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import io.github.hayato2158.lifescore.data.AppDatabase
 import io.github.hayato2158.lifescore.data.ScoreDao
 import io.github.hayato2158.lifescore.data.ScoreRepository
+import java.time.Clock
 import javax.inject.Singleton
 
 @Module
@@ -31,9 +32,15 @@ object AppModule {
         return appDatabase.scoreDao()
     }
 
+//    @Provides
+//    @Singleton // ScoreRepositoryもシングルトンにするのが一般的
+//    fun provideScoreRepository(scoreDao: ScoreDao): ScoreRepository {
+//        return ScoreRepository(scoreDao)
+//    }
     @Provides
-    @Singleton // ScoreRepositoryもシングルトンにするのが一般的
-    fun provideScoreRepository(scoreDao: ScoreDao): ScoreRepository {
-        return ScoreRepository(scoreDao)
-    }
+    @Singleton
+fun provideClock(): Clock {
+    return Clock.systemDefaultZone()
+}
+
 }

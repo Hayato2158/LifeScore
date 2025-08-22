@@ -3,6 +3,7 @@ package io.github.hayato2158.lifescore.data
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import java.time.Clock
 import java.time.LocalDate
 import java.time.YearMonth // YearMonth をインポート
 import java.time.format.DateTimeFormatter // DateTimeFormatter をインポート
@@ -10,12 +11,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ScoreRepository @Inject constructor(private val scoreDao: ScoreDao) {
+class ScoreRepository @Inject constructor(
+    private val scoreDao: ScoreDao,
+    private val clock: Clock
+) {
 
     fun all(): Flow<List<ScoreRecord>> = scoreDao.observeAll()
 
     suspend fun saveToday(score: Int) {
-        val today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE) // YYYY-MM-DD
+        val today = LocalDate.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE) // YYYY-MM-DD
         scoreDao.upsert(ScoreRecord(date = today, score = score))
     }
 

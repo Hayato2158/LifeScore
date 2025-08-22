@@ -60,6 +60,8 @@ fun PreviewScoreHome() {
         ScoreRecord("2025-08-15", 5),
         ScoreRecord("2025-08-14", 3),
         ScoreRecord("2025-08-13", 4),
+        ScoreRecord("2025-08-12", 5),
+
     )
     // PreviewではcurrentMonthScoresもallScoresと同じで良いかもしれませんし、フィルタリングを模倣しても良いです。
     // ここでは当月のデータだけが含まれるようにしてみます。
