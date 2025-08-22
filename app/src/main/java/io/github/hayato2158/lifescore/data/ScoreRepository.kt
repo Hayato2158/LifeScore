@@ -1,20 +1,48 @@
 package io.github.hayato2158.lifescore.data
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import java.time.Clock
 import java.time.LocalDate
+import java.time.YearMonth // YearMonth をインポート
+import java.time.format.DateTimeFormatter // DateTimeFormatter をインポート
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ScoreRepository(
-    private val dao: ScoreDao,
-    private val clock: Clock = Clock.systemDefaultZone()
+@Singleton
+class ScoreRepository @Inject constructor(
+    private val scoreDao: ScoreDao,
+    private val clock: Clock
 ) {
-    fun today(): Flow<ScoreRecord?> =
-        dao.observeByDate(LocalDate.now(clock).toString())
 
-    fun all(): Flow<List<ScoreRecord>> =
-        dao.observeAll()
+    fun all(): Flow<List<ScoreRecord>> = scoreDao.observeAll()
 
     suspend fun saveToday(score: Int) {
-        dao.upsert(ScoreRecord(LocalDate.now(clock).toString(), score))
+        val today = LocalDate.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE) // YYYY-MM-DD
+        scoreDao.upsert(ScoreRecord(date = today, score = score))
+    }
+
+    // 新しく追加するメソッド
+    suspend fun getMonthlySummary(yearMonth: YearMonth): MonthlySummary {
+        return withContext(Dispatchers.IO) { // IOスレッドでDBアクセス
+            val yearMonthStr = yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM"))
+            val scoreAndCount = scoreDao.getMonthlyScoreAndCount(yearMonthStr)
+
+            val totalScore = scoreAndCount.totalScore ?: 0 // nullの場合は0とする
+            val recordCount = scoreAndCount.recordCount
+
+            val averageScore = if (recordCount > 0) {
+                // 小数点以下2桁までに丸める例（必要に応じて調整）
+                String.format("%.2f", totalScore.toDouble() / recordCount).toDouble()
+            } else {
+                0.0
+            }
+            MonthlySummary(
+                totalScore = totalScore,
+                averageScore = averageScore,
+                recordCount = recordCount
+            )
+        }
     }
 }
