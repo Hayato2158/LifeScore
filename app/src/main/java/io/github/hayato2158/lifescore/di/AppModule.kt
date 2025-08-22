@@ -28,6 +28,7 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
     fun provideScoreDao(appDatabase: AppDatabase): ScoreDao {
         return appDatabase.scoreDao()
     }
