@@ -1,57 +1,46 @@
 package io.github.hayato2158.lifescore
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import dagger.hilt.android.AndroidEntryPoint // Hiltのアノテーションをインポート
+import dagger.hilt.android.AndroidEntryPoint
+import io.github.hayato2158.lifescore.data.MonthlySummary // Preview用にMonthlySummaryをインポート
 import io.github.hayato2158.lifescore.data.ScoreRecord
-import io.github.hayato2158.lifescore.ui.ScoreHomeRoute
 import io.github.hayato2158.lifescore.ui.ScoreHomeScreen
 import io.github.hayato2158.lifescore.ui.ScoresViewModel
-import io.github.hayato2158.lifescore.ui.theme.LifeScoreTheme
-import kotlinx.coroutines.launch
-import kotlin.getValue
 
-@AndroidEntryPoint // Hiltが依存関係を注入できるようにするアノテーション
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    // Hiltを使用すると、ViewModelの取得方法も変わります。
-    private val vm: ScoresViewModel by viewModels() // Hiltがファクトリを提供
+    private val vm: ScoresViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // ViewModelから各Stateを収集
+            val allScores by vm.allScores.collectAsState()
+            val currentMonthScores by vm.currentMonthScores.collectAsState()
+            val formattedYearMonth by vm.formattedYearMonth.collectAsState()
+            val monthlySummary by vm.monthlySummary.collectAsState()
+
             MaterialTheme {
                 Surface {
-                    ScoreHomeRoute(viewModel = vm)
+                    ScoreHomeScreen(
+                        allScores = allScores,
+                        currentMonthScores = currentMonthScores,
+                        formattedYearMonth = formattedYearMonth,
+                        monthlySummary = monthlySummary,
+                        onSave = { score -> vm.saveToday(score) },
+                        onPreviousMonth = { vm.changeMonth(-1) },
+                        onNextMonth = { vm.changeMonth(1) }
+                    )
                 }
             }
         }
@@ -59,16 +48,32 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-@androidx.compose.ui.tooling.preview.Preview(
-    showBackground = true, name = "ScoreHome Preview"
-)
+@Preview(showBackground = true, name = "ScoreHome Preview")
 fun PreviewScoreHome() {
-    val fake = listOf(
+    val fakeAllScores = listOf(
         ScoreRecord("2025-08-21", 5),
         ScoreRecord("2025-08-20", 3),
-        ScoreRecord("2025-08-19", 4)
+        ScoreRecord("2025-08-19", 4),
+        ScoreRecord("2025-08-18", 5),
+        ScoreRecord("2025-08-17", 3),
+        ScoreRecord("2025-08-16", 4),
+        ScoreRecord("2025-08-15", 5),
+        ScoreRecord("2025-08-14", 3),
+        ScoreRecord("2025-08-13", 4),
     )
+    // PreviewではcurrentMonthScoresもallScoresと同じで良いかもしれませんし、フィルタリングを模倣しても良いです。
+    // ここでは当月のデータだけが含まれるようにしてみます。
+    val fakeCurrentMonthScores = fakeAllScores.filter { it.date.startsWith("2025-08") }
+
     MaterialTheme {
-        ScoreHomeScreen(items = fake, onSave = {})
+        ScoreHomeScreen(
+            allScores = fakeAllScores,
+            currentMonthScores = fakeCurrentMonthScores,
+            formattedYearMonth = "2025年08月",
+            monthlySummary = MonthlySummary(totalScore = 8, averageScore = 4.0, recordCount = 2), // fakeCurrentMonthScoresに合わせる (5+3=8, count=2)
+            onSave = {},
+            onPreviousMonth = {},
+            onNextMonth = {}
+        )
     }
 }
