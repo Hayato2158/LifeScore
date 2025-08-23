@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-// import androidx.compose.foundation.layout.width // Rowの均等配置に使うかも
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-// import androidx.compose.material.icons.filled.Add // FAB削除のため不要
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
@@ -22,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-// import androidx.compose.material3.FloatingActionButton // FAB削除のため不要
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,19 +27,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-// import androidx.compose.runtime.collectAsState // このファイルでは不要
-// import androidx.compose.runtime.getValue // このファイルでは不要
-// import androidx.compose.runtime.mutableStateOf // showDialog削除のため不要
-// import androidx.compose.runtime.remember // showDialog削除のため不要
-// import androidx.compose.runtime.setValue // showDialog削除のため不要
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-// import androidx.compose.ui.window.Dialog // ScoreInputDialog削除のため不要
 import io.github.hayato2158.lifescore.data.MonthlySummary
 import io.github.hayato2158.lifescore.data.ScoreRecord
 
@@ -58,8 +47,6 @@ fun ScoreHomeScreen(
     onNextMonth: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // var showDialog by remember { mutableStateOf(false) } // ダイアログ関連削除
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -70,11 +57,6 @@ fun ScoreHomeScreen(
                 )
             )
         }
-        // floatingActionButton = { // FAB削除
-        //     FloatingActionButton(onClick = { showDialog = true }) {
-        //         Icon(Icons.Filled.Add, contentDescription = "Add Score")
-        //     }
-        // }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -136,7 +118,7 @@ fun ScoreInputButtons(
             (1..5).forEach { score ->
                 Button(
                     onClick = { onScoreSelected(score) },
-                    modifier = Modifier.padding(horizontal = 4.dp) // ボタン間のスペースを少し
+                    modifier = Modifier.padding(horizontal = 2.dp) // ボタン間のスペースを少し
                 ) {
                     Text(text = "$score")
                 }
@@ -209,9 +191,3 @@ fun ScoreRecordItem(record: ScoreRecord, modifier: Modifier = Modifier) {
         }
     }
 }
-
-// ScoreInputDialog は不要になったので削除
-// @OptIn(ExperimentalMaterial3Api::class)
-// @Composable
-// fun ScoreInputDialog(...) { ... }
-
