@@ -1,5 +1,4 @@
 package io.github.hayato2158.lifescore.ui
-import android.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

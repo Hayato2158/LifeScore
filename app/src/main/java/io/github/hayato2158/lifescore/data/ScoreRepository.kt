@@ -7,7 +7,6 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.YearMonth // YearMonth をインポート
 import java.time.format.DateTimeFormatter // DateTimeFormatter をインポート
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
