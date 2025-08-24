@@ -33,8 +33,7 @@ class ScoreRepository @Inject constructor(
             val recordCount = scoreAndCount.recordCount
 
             val averageScore = if (recordCount > 0) {
-                // 小数点以下2桁までに丸める例（必要に応じて調整）
-                String.format("%.2f", totalScore.toDouble() / recordCount).toDouble()
+                totalScore.toDouble() / recordCount
             } else {
                 0.0
             }

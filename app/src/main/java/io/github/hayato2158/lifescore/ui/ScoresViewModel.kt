@@ -31,11 +31,6 @@ class ScoresViewModel @Inject constructor(
 
     init {
         Log.d("ScoresViewModel", "ViewModel initialized. Repository instance: $repo")
-        if (repo != null) {
-            Log.d("ScoresViewModel", "Hilt injection for ScoreRepository seems successful!")
-        } else {
-            Log.e("ScoresViewModel", "Hilt injection for ScoreRepository FAILED! Repository is null.")
-        }
         // 初期表示月でサマリを読み込む
         loadMonthlySummary(_currentYearMonth.value)
     }
