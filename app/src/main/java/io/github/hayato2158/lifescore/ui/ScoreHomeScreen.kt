@@ -35,6 +35,7 @@ import io.github.hayato2158.lifescore.data.ScoreRecord
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreHomeScreen(
+    allScores: List<ScoreRecord>,
     currentMonthScores: List<ScoreRecord>,
     formattedYearMonth: String,
     monthlySummary: MonthlySummary?,
