@@ -1,6 +1,4 @@
 package io.github.hayato2158.lifescore.ui
-
-import android.R.attr.fontWeight
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
@@ -143,11 +142,11 @@ fun MonthNavigationAndSummary(
             modifier = Modifier.fillMaxWidth()
         ) {
             IconButton(onClick = onPreviousMonth) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Previous Month")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
             }
             Text(text = formattedYearMonth, style = MaterialTheme.typography.headlineSmall)
             IconButton(onClick = onNextMonth) {
-                Icon(Icons.Filled.ArrowForward, contentDescription = "Next Month")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Next Month")
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
