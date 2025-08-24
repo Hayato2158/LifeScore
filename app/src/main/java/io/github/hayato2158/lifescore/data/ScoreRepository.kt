@@ -7,6 +7,7 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.YearMonth // YearMonth をインポート
 import java.time.format.DateTimeFormatter // DateTimeFormatter をインポート
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,8 +34,7 @@ class ScoreRepository @Inject constructor(
             val recordCount = scoreAndCount.recordCount
 
             val averageScore = if (recordCount > 0) {
-                // 小数点以下2桁までに丸める例（必要に応じて調整）
-                String.format("%.2f", totalScore.toDouble() / recordCount).toDouble()
+                String.format(Locale.getDefault(), "%.2f", totalScore.toDouble() / recordCount).toDouble()
             } else {
                 0.0
             }

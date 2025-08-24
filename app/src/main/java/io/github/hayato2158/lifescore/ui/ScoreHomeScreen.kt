@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,7 +35,6 @@ import io.github.hayato2158.lifescore.data.ScoreRecord
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreHomeScreen(
-    allScores: List<ScoreRecord>,
     currentMonthScores: List<ScoreRecord>,
     formattedYearMonth: String,
     monthlySummary: MonthlySummary?,
