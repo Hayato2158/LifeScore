@@ -1,4 +1,5 @@
 package io.github.hayato2158.lifescore.ui
+import android.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.hayato2158.lifescore.data.MonthlySummary
 import io.github.hayato2158.lifescore.data.ScoreRecord
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -144,15 +147,18 @@ fun MonthNavigationAndSummary(
             }
             Text(text = formattedYearMonth, style = MaterialTheme.typography.headlineSmall)
             IconButton(onClick = onNextMonth) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Next Month")
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
         if (summary != null) {
             Card(elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)) {
-                Column(modifier = Modifier.padding(16.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) { // 中央揃え
-                    Text("合計スコア: ${summary.totalScore}", style = MaterialTheme.typography.bodyLarge)
-                    Text("平均スコア: ${"%.2f".format(summary.averageScore)}", style = MaterialTheme.typography.bodyLarge)
+                Column(modifier = Modifier.padding(16.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally)
+                { // 中央揃え
+                    Text("合計スコア:  ${summary.totalScore}", style = MaterialTheme.typography.bodyLarge)
+                    Text("平均スコア: ${String.format(Locale.getDefault(), "%.2f",summary.averageScore)}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                     Text("記録日数: ${summary.recordCount}日", style = MaterialTheme.typography.bodyLarge)
                 }
             }

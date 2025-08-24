@@ -34,7 +34,7 @@ class ScoreRepository @Inject constructor(
             val recordCount = scoreAndCount.recordCount
 
             val averageScore = if (recordCount > 0) {
-                String.format(Locale.getDefault(), "%.2f", totalScore.toDouble() / recordCount).toDouble()
+                totalScore.toDouble() / recordCount
             } else {
                 0.0
             }
