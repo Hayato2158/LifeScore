@@ -1,6 +1,5 @@
 package io.github.hayato2158.lifescore.ui
 
-import android.R.attr.onClick
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -147,8 +146,6 @@ fun ScoreHomeScreen(
 
 @Composable
 fun ScoreInputButtons(
-    memo: String,
-    onMemoChange: (String) -> Unit,
     onScoreSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
