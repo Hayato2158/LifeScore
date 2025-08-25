@@ -19,6 +19,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +44,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.hayato2158.lifescore.data.MonthlySummary
 import io.github.hayato2158.lifescore.data.ScoreRecord
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +59,7 @@ fun ScoreHomeScreen(
     monthlySummary: MonthlySummary?,
     currentMemo: String,
     onMemoChange: (String) -> Unit,
-    onSave: (Int) -> Unit,
+    onSave: (Int, LocalDate) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,6 +67,13 @@ fun ScoreHomeScreen(
 ) {
     var editingRecord by remember { mutableStateOf<ScoreRecord?>(null) }
     var editingMemo by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    )
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("yyyy-MM-dd") }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -87,13 +101,43 @@ fun ScoreHomeScreen(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp) // 上下に少しパディング
             )
 
-            // スコア入力ボタンエリア
+            // 日付選択とスコア入力ボタンエリア
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("日付: ${selectedDate.format(dateFormatter)}")
+                Button(onClick = { showDatePicker = true }) { Text("日付を選択") }
+            }
+
+            if (showDatePicker) {
+                DatePickerDialog(
+                    onDismissRequest = { showDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val millis = datePickerState.selectedDateMillis
+                            if (millis != null) {
+                                selectedDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                            }
+                            showDatePicker = false
+                        }) { Text("OK") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDatePicker = false }) { Text("キャンセル") }
+                    }
+                ) {
+                    DatePicker(state = datePickerState)
+                }
+            }
+
             ScoreInputButtons(
-                onScoreSelected = { score -> onSave(score) },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp) // 上下に少しパディング
+                onScoreSelected = { score -> onSave(score, selectedDate) },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
 
             // スコアリスト (現在の月のスコアのみ表示)
             if (currentMonthScores.isEmpty()) {

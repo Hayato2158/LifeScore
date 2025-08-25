@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine // combine をインポート
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.YearMonth // YearMonth をインポート
 import java.time.format.DateTimeFormatter // DateTimeFormatter をインポート
 import javax.inject.Inject
@@ -73,11 +74,16 @@ class ScoresViewModel @Inject constructor(
         }
     }
 
-    fun saveToday(score: Int) {
+    fun save(score: Int, date: LocalDate) {
         viewModelScope.launch {
-            repo.saveToday(score)
-            loadMonthlySummary(_currentYearMonth.value)
+            repo.save(score, date)
+            val yearMonth = YearMonth.from(date)
+            loadMonthlySummary(yearMonth)
         }
+    }
+
+    fun saveToday(score: Int) {
+        save(score, LocalDate.now())
     }
 
     fun changeMonth(amount: Long) {
