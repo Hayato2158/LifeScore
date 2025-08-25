@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,6 +14,7 @@ import io.github.hayato2158.lifescore.data.MonthlySummary // Preview用にMonthl
 import io.github.hayato2158.lifescore.data.ScoreRecord
 import io.github.hayato2158.lifescore.ui.ScoreHomeScreen
 import io.github.hayato2158.lifescore.ui.ScoresViewModel
+import io.github.hayato2158.lifescore.ui.theme.LifeScoreTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -29,14 +29,17 @@ class MainActivity : ComponentActivity() {
             val currentMonthScores by vm.currentMonthScores.collectAsState()
             val formattedYearMonth by vm.formattedYearMonth.collectAsState()
             val monthlySummary by vm.monthlySummary.collectAsState()
+            val currentMemo by vm.currentMemo.collectAsState()
 
-            MaterialTheme {
+            LifeScoreTheme {
                 Surface {
                     ScoreHomeScreen(
                         allScores = allScores,
                         currentMonthScores = currentMonthScores,
                         formattedYearMonth = formattedYearMonth,
                         monthlySummary = monthlySummary,
+                        currentMemo = currentMemo,
+                        onMemoChange = vm::updateMemo,
                         onSave = { score -> vm.saveToday(score) },
                         onPreviousMonth = { vm.changeMonth(-1) },
                         onNextMonth = { vm.changeMonth(1) }
@@ -67,12 +70,14 @@ fun PreviewScoreHome() {
     // ここでは当月のデータだけが含まれるようにしてみます。
     val fakeCurrentMonthScores = fakeAllScores.filter { it.date.startsWith("2025-08") }
 
-    MaterialTheme {
+    LifeScoreTheme {
         ScoreHomeScreen(
             allScores = fakeAllScores,
             currentMonthScores = fakeCurrentMonthScores,
             formattedYearMonth = "2025年08月",
             monthlySummary = MonthlySummary(totalScore = 8, averageScore = 4.0, recordCount = 2), // fakeCurrentMonthScoresに合わせる (5+3=8, count=2)
+            currentMemo = "",
+            onMemoChange = {},
             onSave = {},
             onPreviousMonth = {},
             onNextMonth = {}

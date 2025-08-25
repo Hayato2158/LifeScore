@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -41,6 +42,8 @@ fun ScoreHomeScreen(
     currentMonthScores: List<ScoreRecord>,
     formattedYearMonth: String,
     monthlySummary: MonthlySummary?,
+    currentMemo: String,
+    onMemoChange: (String) -> Unit,
     onSave: (Int) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
@@ -74,6 +77,8 @@ fun ScoreHomeScreen(
 
             // スコア入力ボタンエリア
             ScoreInputButtons(
+                memo = currentMemo,
+                onMemoChange = onMemoChange,
                 onScoreSelected = { score -> onSave(score) },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp) // 上下に少しパディング
             )
@@ -104,10 +109,19 @@ fun ScoreHomeScreen(
 
 @Composable
 fun ScoreInputButtons(
+    memo: String,
+    onMemoChange: (String) -> Unit,
     onScoreSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        OutlinedTextField(
+            value = memo,
+            onValueChange = onMemoChange,
+            label = { Text("メモ") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         Text("今日の気分は？", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -181,15 +195,23 @@ fun ScoreRecordItem(record: ScoreRecord, modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth(),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
         ) {
-            Text(text = record.date, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${record.score}", style = MaterialTheme.typography.headlineSmall)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = record.date, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "${record.score}", style = MaterialTheme.typography.headlineSmall)
+            }
+            if (!record.memo.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = record.memo ?: "", style = MaterialTheme.typography.bodyMedium)
+            }
         }
     }
 }

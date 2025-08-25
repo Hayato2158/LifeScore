@@ -23,7 +23,8 @@ object AppModule {
             context.applicationContext,
             AppDatabase::class.java,
             "app.db" // データベース名
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
