@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "score_records")
 data class ScoreRecord(
     @PrimaryKey val date: String,
-    val score: Int
+    val score: Int,
+    val memo: String? = null
 )

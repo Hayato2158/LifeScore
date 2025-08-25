@@ -24,6 +24,9 @@ interface ScoreDao {
     @Query("SELECT SUM(score) as totalScore, COUNT(date) as recordCount FROM score_records WHERE date LIKE :yearMonth || '%'")
     suspend fun getMonthlyScoreAndCount(yearMonth: String): MonthlyScoreAndCount
 
+    @Query("SELECT * FROM score_records WHERE date = :date LIMIT 1")
+    suspend fun findByDate(date: String): ScoreRecord?
+
     // 合計と件数だけを保持するシンプルなデータクラス (ScoreDao内で使用)
     data class MonthlyScoreAndCount(
         val totalScore: Int?, // レコードがない場合nullになる可能性がある

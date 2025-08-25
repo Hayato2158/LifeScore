@@ -29,6 +29,8 @@ class MainActivity : ComponentActivity() {
             val currentMonthScores by vm.currentMonthScores.collectAsState()
             val formattedYearMonth by vm.formattedYearMonth.collectAsState()
             val monthlySummary by vm.monthlySummary.collectAsState()
+            val currentMemo by vm.currentMemo.collectAsState()
+
 
             MaterialTheme {
                 Surface {
@@ -37,9 +39,12 @@ class MainActivity : ComponentActivity() {
                         currentMonthScores = currentMonthScores,
                         formattedYearMonth = formattedYearMonth,
                         monthlySummary = monthlySummary,
+                        currentMemo = currentMemo,
+                        onMemoChange = vm::updateMemo,
                         onSave = { score -> vm.saveToday(score) },
                         onPreviousMonth = { vm.changeMonth(-1) },
-                        onNextMonth = { vm.changeMonth(1) }
+                        onNextMonth = { vm.changeMonth(1) },
+                        onRecordMemoChange = vm::updateRecordMemo
                     )
                 }
             }
@@ -54,14 +59,6 @@ fun PreviewScoreHome() {
         ScoreRecord("2025-08-21", 5),
         ScoreRecord("2025-08-20", 3),
         ScoreRecord("2025-08-19", 4),
-        ScoreRecord("2025-08-18", 5),
-        ScoreRecord("2025-08-17", 3),
-        ScoreRecord("2025-08-16", 4),
-        ScoreRecord("2025-08-15", 5),
-        ScoreRecord("2025-08-14", 3),
-        ScoreRecord("2025-08-13", 4),
-        ScoreRecord("2025-08-12", 5),
-
     )
     // PreviewではcurrentMonthScoresもallScoresと同じで良いかもしれませんし、フィルタリングを模倣しても良いです。
     // ここでは当月のデータだけが含まれるようにしてみます。
@@ -72,10 +69,13 @@ fun PreviewScoreHome() {
             allScores = fakeAllScores,
             currentMonthScores = fakeCurrentMonthScores,
             formattedYearMonth = "2025年08月",
-            monthlySummary = MonthlySummary(totalScore = 8, averageScore = 4.0, recordCount = 2), // fakeCurrentMonthScoresに合わせる (5+3=8, count=2)
+            monthlySummary = MonthlySummary(totalScore = 8, averageScore = 4.0, recordCount = 2),
+            currentMemo = "",
+            onMemoChange = {},
             onSave = {},
             onPreviousMonth = {},
-            onNextMonth = {}
+            onNextMonth = {},
+            onRecordMemoChange = { _, _ -> }
         )
     }
 }
