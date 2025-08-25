@@ -29,6 +29,9 @@ class ScoresViewModel @Inject constructor(
     private val _monthlySummary = MutableStateFlow<MonthlySummary?>(null)
     val monthlySummary: StateFlow<MonthlySummary?> = _monthlySummary.asStateFlow()
 
+    private val _currentMemo = MutableStateFlow("")
+    val currentMemo: StateFlow<String> = _currentMemo.asStateFlow()
+
     init {
         Log.d("ScoresViewModel", "ViewModel initialized. Repository instance: $repo")
         // 初期表示月でサマリを読み込む
@@ -59,6 +62,16 @@ class ScoresViewModel @Inject constructor(
                 record.date.startsWith(yearMonthStr) // "YYYY-MM-DD" が "YYYY-MM" で始まるかでフィルタ
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun updateMemo(newMemo: String) {
+        _currentMemo.value = newMemo
+    }
+
+    fun updateRecordMemo(record: ScoreRecord, memo: String) {
+        viewModelScope.launch {
+            repo.updateMemo(record, memo.ifBlank { null })
+        }
+    }
 
     fun saveToday(score: Int) {
         viewModelScope.launch {

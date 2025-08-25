@@ -13,17 +13,19 @@ import java.time.Clock
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class) // Application全体でシングルトンとして提供
+@InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides
-    @Singleton // AppDatabaseはシングルトンにする
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             AppDatabase::class.java,
-            "app.db" // データベース名
-        ).build()
+            "app.db"
+        )
+        .addMigrations(AppDatabase.MIGRATION_1_2)
+        .build()
     }
 
     @Provides
@@ -34,8 +36,7 @@ object AppModule {
 
     @Provides
     @Singleton
-fun provideClock(): Clock {
-    return Clock.systemDefaultZone()
-}
-
+    fun provideClock(): Clock {
+        return Clock.systemDefaultZone()
+    }
 }

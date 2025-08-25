@@ -16,11 +16,16 @@ class ScoreRepository @Inject constructor(
     private val clock: Clock
 ) {
 
+
     fun all(): Flow<List<ScoreRecord>> = scoreDao.observeAll()
 
     suspend fun saveToday(score: Int) {
         val today = LocalDate.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE) // YYYY-MM-DD
         scoreDao.upsert(ScoreRecord(date = today, score = score))
+    }
+
+    suspend fun updateMemo(record: ScoreRecord, memo: String?)  {
+        scoreDao.upsert(record.copy(memo = memo))
     }
 
     // 新しく追加するメソッド

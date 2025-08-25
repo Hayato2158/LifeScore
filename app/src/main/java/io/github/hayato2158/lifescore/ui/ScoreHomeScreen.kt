@@ -1,4 +1,7 @@
 package io.github.hayato2158.lifescore.ui
+
+import android.R.attr.onClick
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,10 +25,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -41,11 +51,17 @@ fun ScoreHomeScreen(
     currentMonthScores: List<ScoreRecord>,
     formattedYearMonth: String,
     monthlySummary: MonthlySummary?,
+    currentMemo: String,
+    onMemoChange: (String) -> Unit,
     onSave: (Int) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRecordMemoChange: (ScoreRecord, String) -> Unit
 ) {
+    var editingRecord by remember { mutableStateOf<ScoreRecord?>(null) }
+    var editingMemo by remember { mutableStateOf("") }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -74,6 +90,8 @@ fun ScoreHomeScreen(
 
             // スコア入力ボタンエリア
             ScoreInputButtons(
+                memo = currentMemo,
+                onMemoChange = onMemoChange,
                 onScoreSelected = { score -> onSave(score) },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp) // 上下に少しパディング
             )
@@ -93,10 +111,35 @@ fun ScoreHomeScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.weight(1f) // 残りのスペースを埋めるように
                 ) {
-                    items(currentMonthScores, key = { it.date }) { record -> // it.id から it.date にキーを変更 (ScoreRecordの主キーはdate)
-                        ScoreRecordItem(record)
+                    items(currentMonthScores, key = { it.date }) { record ->
+                        ScoreRecordItem(record = record, onClick = {
+                            editingRecord = record
+                            editingMemo = record.memo.orEmpty()
+                        })
                     }
                 }
+            }
+            if (editingRecord != null) {
+                AlertDialog(
+                    onDismissRequest = { editingRecord = null },
+                    title = { Text("メモ編集") },
+                    text = {
+                        OutlinedTextField(
+                            value = editingMemo,
+                            onValueChange = { editingMemo = it },
+                            label = { Text("メモ") }
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            editingRecord?.let { onRecordMemoChange(it, editingMemo) }
+                            editingRecord = null
+                        }) { Text("保存") }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { editingRecord = null }) { Text("キャンセル") }
+                    }
+                )
             }
         }
     }
@@ -104,6 +147,8 @@ fun ScoreHomeScreen(
 
 @Composable
 fun ScoreInputButtons(
+    memo: String,
+    onMemoChange: (String) -> Unit,
     onScoreSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -176,20 +221,28 @@ fun MonthNavigationAndSummary(
 
 
 @Composable
-fun ScoreRecordItem(record: ScoreRecord, modifier: Modifier = Modifier) {
+fun ScoreRecordItem(record: ScoreRecord, onClick: (ScoreRecord) -> Unit, modifier: Modifier = Modifier) {
     ElevatedCard(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickable{ onClick(record) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
         ) {
-            Text(text = record.date, style = MaterialTheme.typography.bodyLarge)
-            Text(text = "${record.score}", style = MaterialTheme.typography.headlineSmall)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = record.date, style = MaterialTheme.typography.bodyLarge)
+                Text(text = "${record.score}", style = MaterialTheme.typography.headlineSmall)
+            }
+            if (!record.memo.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = record.memo ?: "", style = MaterialTheme.typography.bodyMedium)
+            }
         }
     }
 }
