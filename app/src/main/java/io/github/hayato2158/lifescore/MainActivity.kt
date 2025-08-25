@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         monthlySummary = monthlySummary,
                         currentMemo = currentMemo,
                         onMemoChange = vm::updateMemo,
-                        onSave = { score -> vm.saveToday(score) },
+                        onSave = { score, date -> vm.save(score,date) },
                         onPreviousMonth = { vm.changeMonth(-1) },
                         onNextMonth = { vm.changeMonth(1) },
                         onRecordMemoChange = vm::updateRecordMemo
@@ -72,7 +72,7 @@ fun PreviewScoreHome() {
             monthlySummary = MonthlySummary(totalScore = 8, averageScore = 4.0, recordCount = 2),
             currentMemo = "",
             onMemoChange = {},
-            onSave = {},
+            onSave = {_, _ ->},
             onPreviousMonth = {},
             onNextMonth = {},
             onRecordMemoChange = { _, _ -> }
