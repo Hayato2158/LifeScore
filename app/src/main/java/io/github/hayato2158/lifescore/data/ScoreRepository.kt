@@ -21,7 +21,9 @@ class ScoreRepository @Inject constructor(
 
     suspend fun saveToday(score: Int) {
         val today = LocalDate.now(clock).format(DateTimeFormatter.ISO_LOCAL_DATE) // YYYY-MM-DD
-        scoreDao.upsert(ScoreRecord(date = today, score = score))
+        val existing = scoreDao.findByDate(today)
+        val keptMemo = existing?.memo
+        scoreDao.upsert(ScoreRecord(date = today, score = score, memo = keptMemo))
     }
 
     suspend fun updateMemo(record: ScoreRecord, memo: String?)  {

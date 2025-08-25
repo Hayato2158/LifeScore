@@ -89,8 +89,6 @@ fun ScoreHomeScreen(
 
             // スコア入力ボタンエリア
             ScoreInputButtons(
-                memo = currentMemo,
-                onMemoChange = onMemoChange,
                 onScoreSelected = { score -> onSave(score) },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp) // 上下に少しパディング
             )
