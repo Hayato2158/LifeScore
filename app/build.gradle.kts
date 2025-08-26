@@ -86,7 +86,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
 
     //showChart
-    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.compose.icons.extended)
 
     // Hiltが要求するJavaPoetのバージョンと競合を解決するため、バージョンを強制する
     constraints {
