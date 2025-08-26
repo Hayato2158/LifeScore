@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ShowChart
+import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -63,7 +65,8 @@ fun ScoreHomeScreen(
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     modifier: Modifier = Modifier,
-    onRecordMemoChange: (ScoreRecord, String) -> Unit
+    onRecordMemoChange: (ScoreRecord, String) -> Unit,
+    onShowChart: () -> Unit
 ) {
     var editingRecord by remember { mutableStateOf<ScoreRecord?>(null) }
     var editingMemo by remember { mutableStateOf("") }
@@ -82,7 +85,12 @@ fun ScoreHomeScreen(
                 title = { Text("LifeScore") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                actions = {
+                    IconButton(onClick = onShowChart) {
+                        Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Show Chart")
+                    }
+                }
             )
         }
     ) { innerPadding ->

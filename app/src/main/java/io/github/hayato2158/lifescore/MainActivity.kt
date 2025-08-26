@@ -9,10 +9,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.hayato2158.lifescore.data.MonthlySummary // Preview用にMonthlySummaryをインポート
 import io.github.hayato2158.lifescore.data.ScoreRecord
+import io.github.hayato2158.lifescore.ui.MonthlyScoreChartScreen
 import io.github.hayato2158.lifescore.ui.ScoreHomeScreen
 import io.github.hayato2158.lifescore.ui.ScoresViewModel
 
@@ -30,22 +34,35 @@ class MainActivity : ComponentActivity() {
             val formattedYearMonth by vm.formattedYearMonth.collectAsState()
             val monthlySummary by vm.monthlySummary.collectAsState()
             val currentMemo by vm.currentMemo.collectAsState()
+            val currentYearMonth by vm.currentYearMonth.collectAsState()
 
 
             MaterialTheme {
                 Surface {
-                    ScoreHomeScreen(
-                        allScores = allScores,
-                        currentMonthScores = currentMonthScores,
-                        formattedYearMonth = formattedYearMonth,
-                        monthlySummary = monthlySummary,
-                        currentMemo = currentMemo,
-                        onMemoChange = vm::updateMemo,
-                        onSave = { score, date -> vm.save(score,date) },
-                        onPreviousMonth = { vm.changeMonth(-1) },
-                        onNextMonth = { vm.changeMonth(1) },
-                        onRecordMemoChange = vm::updateRecordMemo
-                    )
+                    var showChart by remember { mutableStateOf(false) }
+                    if (showChart){
+                        MonthlyScoreChartScreen(
+                            scores = currentMonthScores,
+                            yearMonth = currentYearMonth,
+                            formattedYearMonth = formattedYearMonth,
+                            onBack = { showChart = false }
+                        )
+                    }
+                    else{
+                        ScoreHomeScreen(
+                            allScores = allScores,
+                            currentMonthScores = currentMonthScores,
+                            formattedYearMonth = formattedYearMonth,
+                            monthlySummary = monthlySummary,
+                            currentMemo = currentMemo,
+                            onMemoChange = vm::updateMemo,
+                            onSave = { score, date -> vm.save(score,date) },
+                            onPreviousMonth = { vm.changeMonth(-1) },
+                            onNextMonth = { vm.changeMonth(1) },
+                            onRecordMemoChange = vm::updateRecordMemo,
+                            onShowChart = { showChart = true }
+                        )
+                    }
                 }
             }
         }
@@ -75,7 +92,8 @@ fun PreviewScoreHome() {
             onSave = {_, _ ->},
             onPreviousMonth = {},
             onNextMonth = {},
-            onRecordMemoChange = { _, _ -> }
+            onRecordMemoChange = { _, _ -> },
+            onShowChart = {}
         )
     }
 }
