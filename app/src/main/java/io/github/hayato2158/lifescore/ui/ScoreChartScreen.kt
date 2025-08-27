@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,7 +39,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.room.util.TableInfo
 import io.github.hayato2158.lifescore.R
 import java.time.format.DateTimeFormatter
 import kotlin.math.hypot
@@ -119,11 +119,11 @@ fun MonthlyScoreChartScreen(
             ) {
                 Canvas(
                     modifier = Modifier
-                        .padding(innerPadding)
-                        .padding(16.dp)
                         .fillMaxWidth()
                         .height(300.dp)
+
                         .pointerInput(parsed, daysInMonth) {
+
                             detectTapGestures { tapOffset ->
                                 val width = size.width
                                 val height = size.height
@@ -138,7 +138,9 @@ fun MonthlyScoreChartScreen(
                                 val minScore = 1
                                 val maxScore = 5
                                 selectedMemo = null
+
                                 parsed.forEach { (date, score, memo) ->
+
                                     if (memo != null) {
                                         val dayRatio =
                                             (date.dayOfMonth - 1).toFloat() / (daysInMonth - 1).coerceAtLeast(
@@ -262,20 +264,21 @@ fun MonthlyScoreChartScreen(
                         }
                     }
                 }
-                // ← ここはComposableスコープなのでOK
                 selectedMemo?.let { memo ->
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = memo,
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
+
                         color = labelColor,
                         style = MaterialTheme.typography.bodyMedium
                     )
+                }
             }
         }
     }
 }
+
     @Preview(showBackground = true, name = "MonthlyScoreChart (with data)")
     @Composable
     fun PreviewMonthlyScoreChart_WithData() {
