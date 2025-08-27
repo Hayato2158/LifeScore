@@ -105,15 +105,15 @@ fun MonthlyScoreChartScreen(
                     .padding(innerPadding)
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(300.dp)
             ) {
                 val width = size.width
                 val height = size.height
 
                 val verticalPadding = with(density) { 20.dp.toPx() }
                 val horizontalPadding = with(density) { 30.dp.toPx() }
-                val tickLength = with(density) { 4.dp.toPx() }
-                textPaint.textSize = with(density) { 10.dp.toPx() }
+                val tickLength = with(density) { 6.dp.toPx() }
+                textPaint.textSize = with(density) { 9.dp.toPx() }
 
                 val graphLeft = horizontalPadding
                 val graphTop = verticalPadding
@@ -132,7 +132,7 @@ fun MonthlyScoreChartScreen(
                 drawLine(
                     color = axisColor,
                     start = Offset(graphLeft, graphBottom),
-                    end = Offset(graphLeft, graphBottom)
+                    end = Offset(graphRight, graphBottom)
                 )
 
                 //Y軸のラベル
@@ -157,6 +157,7 @@ fun MonthlyScoreChartScreen(
                     )
                 }
 
+                //X軸
                 val dayFormatter = DateTimeFormatter.ofPattern("d")
                 if (parsed.isNotEmpty()) {
                     val firstDayOfMonth = parsed.first().first.withDayOfMonth(1)
@@ -208,7 +209,7 @@ fun MonthlyScoreChartScreen(
                         drawPath(
                             path = path,
                             color = primaryColor,
-                            style = Stroke(width = 2.dp.toPx())
+                            style = Stroke(width = 1.dp.toPx())
                         )
                     }
                 }
@@ -235,6 +236,10 @@ fun PreviewMonthlyScoreChart_WithData() {
         ScoreRecord(ym.atDay(11).format(fmt), 5, "最高！"),
         ScoreRecord(ym.atDay(15).format(fmt), 1, "体調いまいち"),
         ScoreRecord(ym.atDay(20).format(fmt), 4, null),
+        ScoreRecord(ym.atDay(21).format(fmt), 4, null),
+        ScoreRecord(ym.atDay(22).format(fmt), 4, null),
+        ScoreRecord(ym.atDay(23).format(fmt), 4, null),
+        ScoreRecord(ym.atDay(24).format(fmt), 4, null),
         ScoreRecord(ym.atDay(28).format(fmt), 3, null),
     )
 
