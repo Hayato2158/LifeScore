@@ -36,7 +36,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" } # Hiltライブラリ
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" } # Hiltコンパイラ
 
-compose-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+compose-icons-extended = { module = "androidx.compose.material:material-icons-extended", name = "material-icons-extended"}
 
 
 [plugins]

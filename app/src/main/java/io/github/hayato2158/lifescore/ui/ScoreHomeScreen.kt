@@ -40,9 +40,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.github.hayato2158.lifescore.R
 import io.github.hayato2158.lifescore.data.MonthlySummary
 import io.github.hayato2158.lifescore.data.ScoreRecord
 import java.time.Instant
@@ -233,11 +235,11 @@ fun MonthNavigationAndSummary(
             modifier = Modifier.fillMaxWidth()
         ) {
             IconButton(onClick = onPreviousMonth) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.previous_month_button_description))
             }
             Text(text = formattedYearMonth, style = MaterialTheme.typography.headlineSmall)
             IconButton(onClick = onNextMonth) {
-                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = stringResource(R.string.next_month_button_description))
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
