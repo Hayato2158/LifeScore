@@ -1,5 +1,10 @@
 package io.github.hayato2158.lifescore.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -8,9 +13,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +40,7 @@ import io.github.hayato2158.lifescore.data.ScoreRecord
 import java.time.LocalDate
 import java.time.YearMonth
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -89,6 +100,10 @@ fun MonthlyScoreChartScreen(
                     .sortedBy { it.first }
             }
             var selectedMemo by remember { mutableStateOf<String?>(null) }
+            var memoSnapshot by remember { mutableStateOf("") }
+            LaunchedEffect(selectedMemo) {
+                selectedMemo?.let { memoSnapshot = it }
+            }
 
             val daysInMonth = yearMonth.lengthOfMonth().coerceAtLeast(1)
 
@@ -138,6 +153,7 @@ fun MonthlyScoreChartScreen(
                                 val minScore = 1
                                 val maxScore = 5
                                 selectedMemo = null
+                                val hitRadius = with(density) { 12.dp.toPx() }
 
                                 parsed.forEach { (date, score, memo) ->
 
@@ -149,7 +165,7 @@ fun MonthlyScoreChartScreen(
                                         val x = graphLeft + dayRatio * graphWidth
                                         val y =
                                             graphBottom - (score - minScore) / (maxScore - minScore).toFloat() * graphHeight
-                                        if (hypot(tapOffset.x - x, tapOffset.y - y) <= 20f) {
+                                        if (hypot(tapOffset.x - x, tapOffset.y - y) <= hitRadius) {
                                             selectedMemo = memo
                                             return@detectTapGestures
                                         }
@@ -264,15 +280,50 @@ fun MonthlyScoreChartScreen(
                         }
                     }
                 }
-                selectedMemo?.let { memo ->
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = memo,
-                        modifier = Modifier.fillMaxWidth(),
+                AnimatedVisibility(
+                    visible = selectedMemo != null,
+                    enter = fadeIn() + slideInVertically { it / 3 },
+                    exit = fadeOut() + slideOutVertically { it / 3 },
+                ) {
+                    androidx.compose.material3.Card(
+                        modifier = Modifier
+                            .padding(top = 12.dp)
+                            .fillMaxWidth(),
+                        colors = CardDefaults.elevatedCardColors(),
+                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+                        shape = MaterialTheme.shapes.large
+                    ) {
+                        Column(Modifier.padding(16.dp)) {
+                            // ヘッダー行（タイトル + 閉じる）
+                            androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "メモ",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                                IconButton(onClick = { selectedMemo = null }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Close,
+                                        contentDescription = "閉じる"
+                                    )
+                                }
+                            }
+                            // 本文（長文も崩れないように高さ制限＋スクロール）
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 0.dp, max = 160.dp)
+                                    .verticalScroll(rememberScrollState())
+                            ) {
+                                Text(
+                                    text = selectedMemo!!,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = labelColor
 
-                        color = labelColor,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
