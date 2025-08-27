@@ -316,10 +316,9 @@ fun MonthlyScoreChartScreen(
                                     .verticalScroll(rememberScrollState())
                             ) {
                                 Text(
-                                    text = selectedMemo!!,
+                                    text = memoSnapshot,
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = labelColor
-
                                 )
                             }
                         }
