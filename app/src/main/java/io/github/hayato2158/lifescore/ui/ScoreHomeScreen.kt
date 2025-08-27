@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -39,9 +40,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.github.hayato2158.lifescore.R
 import io.github.hayato2158.lifescore.data.MonthlySummary
 import io.github.hayato2158.lifescore.data.ScoreRecord
 import java.time.Instant
@@ -53,17 +56,15 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreHomeScreen(
-    allScores: List<ScoreRecord>,
     currentMonthScores: List<ScoreRecord>,
     formattedYearMonth: String,
     monthlySummary: MonthlySummary?,
-    currentMemo: String,
-    onMemoChange: (String) -> Unit,
     onSave: (Int, LocalDate) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
     modifier: Modifier = Modifier,
-    onRecordMemoChange: (ScoreRecord, String) -> Unit
+    onRecordMemoChange: (ScoreRecord, String) -> Unit,
+    onShowChart: () -> Unit
 ) {
     var editingRecord by remember { mutableStateOf<ScoreRecord?>(null) }
     var editingMemo by remember { mutableStateOf("") }
@@ -82,7 +83,12 @@ fun ScoreHomeScreen(
                 title = { Text("LifeScore") },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                ),
+                actions = {
+                    IconButton(onClick = onShowChart) {
+                        Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Show Chart")
+                    }
+                }
             )
         }
     ) { innerPadding ->
@@ -226,11 +232,11 @@ fun MonthNavigationAndSummary(
             modifier = Modifier.fillMaxWidth()
         ) {
             IconButton(onClick = onPreviousMonth) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Previous Month")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.previous_month_button_description))
             }
             Text(text = formattedYearMonth, style = MaterialTheme.typography.headlineSmall)
             IconButton(onClick = onNextMonth) {
-                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Month")
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = stringResource(R.string.next_month_button_description))
             }
         }
         Spacer(modifier = Modifier.height(8.dp))

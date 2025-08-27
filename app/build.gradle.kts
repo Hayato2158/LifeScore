@@ -85,6 +85,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
 
+    //showChart
+    implementation(libs.compose.icons.extended)
+
     // Hiltが要求するJavaPoetのバージョンと競合を解決するため、バージョンを強制する
     constraints {
         implementation("com.squareup:javapoet:1.13.0") {
