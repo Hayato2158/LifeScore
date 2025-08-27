@@ -55,12 +55,9 @@ class MainActivity : ComponentActivity() {
                     }
                     else{
                         ScoreHomeScreen(
-                            allScores = allScores,
                             currentMonthScores = currentMonthScores,
                             formattedYearMonth = formattedYearMonth,
                             monthlySummary = monthlySummary,
-                            currentMemo = currentMemo,
-                            onMemoChange = vm::updateMemo,
                             onSave = { score, date -> vm.save(score,date) },
                             onPreviousMonth = { vm.changeMonth(-1) },
                             onNextMonth = { vm.changeMonth(1) },
@@ -88,12 +85,9 @@ fun PreviewScoreHome() {
 
     MaterialTheme {
         ScoreHomeScreen(
-            allScores = fakeAllScores,
             currentMonthScores = fakeCurrentMonthScores,
             formattedYearMonth = "2025年08月",
             monthlySummary = MonthlySummary(totalScore = 8, averageScore = 4.0, recordCount = 2),
-            currentMemo = "",
-            onMemoChange = {},
             onSave = {_, _ ->},
             onPreviousMonth = {},
             onNextMonth = {},

@@ -56,12 +56,9 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScoreHomeScreen(
-    allScores: List<ScoreRecord>,
     currentMonthScores: List<ScoreRecord>,
     formattedYearMonth: String,
     monthlySummary: MonthlySummary?,
-    currentMemo: String,
-    onMemoChange: (String) -> Unit,
     onSave: (Int, LocalDate) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
