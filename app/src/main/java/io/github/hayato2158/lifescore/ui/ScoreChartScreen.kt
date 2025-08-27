@@ -160,8 +160,6 @@ fun MonthlyScoreChartScreen(
                 //X軸
                 val dayFormatter = DateTimeFormatter.ofPattern("d")
                 if (parsed.isNotEmpty()) {
-                    val firstDayOfMonth = parsed.first().first.withDayOfMonth(1)
-                    val lastDayPlotting = parsed.last().first
 
                     parsed.forEach { (date, _) ->
                         val dayRatio =
