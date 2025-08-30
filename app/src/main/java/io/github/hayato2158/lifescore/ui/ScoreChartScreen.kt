@@ -252,7 +252,7 @@ fun MonthlyScoreChartScreen(
                         // Scoreデータをプロット
                         val path = Path()
                         if (parsed.isNotEmpty()) {
-                            parsed.forEachIndexed { index, (date, score, memo) ->
+                            parsed.forEachIndexed { index, (date, score) ->
                                 val dayRatio =
                                     (date.dayOfMonth - 1).toFloat() / (daysInMonth - 1).coerceAtLeast(
                                         1
