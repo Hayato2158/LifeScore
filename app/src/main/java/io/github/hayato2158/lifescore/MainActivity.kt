@@ -30,13 +30,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             // ViewModelから各Stateを収集
-            val allScores by vm.allScores.collectAsState()
             val currentMonthScores by vm.currentMonthScores.collectAsState()
             val formattedYearMonth by vm.formattedYearMonth.collectAsState()
             val monthlySummary by vm.monthlySummary.collectAsState()
-            val currentMemo by vm.currentMemo.collectAsState()
             val currentYearMonth by vm.currentYearMonth.collectAsState()
-
 
             MaterialTheme {
                 Surface {

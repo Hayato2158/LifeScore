@@ -294,7 +294,7 @@ fun ScoreRecordItem(record: ScoreRecord, onClick: (ScoreRecord) -> Unit, modifie
             }
             if (!record.memo.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = record.memo ?: "", style = MaterialTheme.typography.bodyMedium)
+                Text(text = record.memo, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

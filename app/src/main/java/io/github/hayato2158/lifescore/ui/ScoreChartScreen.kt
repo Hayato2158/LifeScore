@@ -300,7 +300,7 @@ fun MonthlyScoreChartScreen(
                                     text = "メモ",
                                     style = MaterialTheme.typography.titleMedium
                                 )
-                                androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                                Spacer(Modifier.weight(1f))
                                 IconButton(onClick = { selectedMemo = null }) {
                                     Icon(
                                         imageVector = Icons.Outlined.Close,

@@ -64,9 +64,6 @@ class ScoresViewModel @Inject constructor(
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    fun updateMemo(newMemo: String) {
-        _currentMemo.value = newMemo
-    }
 
     fun updateRecordMemo(record: ScoreRecord, memo: String) {
         viewModelScope.launch {
@@ -88,10 +85,6 @@ class ScoresViewModel @Inject constructor(
             val yearMonth = YearMonth.from(date)
             loadMonthlySummary(yearMonth)
         }
-    }
-
-    fun saveToday(score: Int) {
-        save(score, LocalDate.now())
     }
 
     fun changeMonth(amount: Long) {
