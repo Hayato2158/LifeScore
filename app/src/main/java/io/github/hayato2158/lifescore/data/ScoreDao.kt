@@ -1,6 +1,7 @@
 package io.github.hayato2158.lifescore.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -26,6 +27,9 @@ interface ScoreDao {
 
     @Query("SELECT * FROM score_records WHERE date = :date LIMIT 1")
     suspend fun findByDate(date: String): ScoreRecord?
+
+    @Delete
+    suspend fun delete(entity: ScoreRecord)
 
     // 合計と件数だけを保持するシンプルなデータクラス (ScoreDao内で使用)
     data class MonthlyScoreAndCount(

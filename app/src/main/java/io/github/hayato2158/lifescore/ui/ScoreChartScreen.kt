@@ -268,7 +268,7 @@ fun MonthlyScoreChartScreen(
                                 }
                                 drawCircle(
                                     color = primaryColor,
-                                    radius = 4.dp.toPx(),
+                                    radius = 4.5.dp.toPx(),
                                     center = Offset(x, y)
                                 )
                             }

@@ -74,6 +74,14 @@ class ScoresViewModel @Inject constructor(
         }
     }
 
+    fun deleteRecord(record: ScoreRecord) {
+        viewModelScope.launch {
+            repo.delete(record)
+            val date = LocalDate.parse(record.date)
+            loadMonthlySummary(YearMonth.from(date))
+        }
+    }
+
     fun save(score: Int, date: LocalDate) {
         viewModelScope.launch {
             repo.save(score, date)

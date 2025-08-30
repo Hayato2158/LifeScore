@@ -62,7 +62,8 @@ class MainActivity : ComponentActivity() {
                             onPreviousMonth = { vm.changeMonth(-1) },
                             onNextMonth = { vm.changeMonth(1) },
                             onRecordMemoChange = vm::updateRecordMemo,
-                            onShowChart = { showChart = true }
+                            onShowChart = { showChart = true },
+                            onDeleteRecord = vm::deleteRecord
                         )
                     }
                 }
@@ -92,7 +93,8 @@ fun PreviewScoreHome() {
             onPreviousMonth = {},
             onNextMonth = {},
             onRecordMemoChange = { _, _ -> },
-            onShowChart = {}
+            onShowChart = {},
+            onDeleteRecord = {}
         )
     }
 }
