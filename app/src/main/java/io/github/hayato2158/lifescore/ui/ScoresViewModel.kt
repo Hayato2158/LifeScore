@@ -30,9 +30,6 @@ class ScoresViewModel @Inject constructor(
     private val _monthlySummary = MutableStateFlow<MonthlySummary?>(null)
     val monthlySummary: StateFlow<MonthlySummary?> = _monthlySummary.asStateFlow()
 
-    private val _currentMemo = MutableStateFlow("")
-    val currentMemo: StateFlow<String> = _currentMemo.asStateFlow()
-
     init {
         Log.d("ScoresViewModel", "ViewModel initialized. Repository instance: $repo")
         // 初期表示月でサマリを読み込む
@@ -64,13 +61,18 @@ class ScoresViewModel @Inject constructor(
             }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    fun updateMemo(newMemo: String) {
-        _currentMemo.value = newMemo
-    }
 
     fun updateRecordMemo(record: ScoreRecord, memo: String) {
         viewModelScope.launch {
             repo.updateMemo(record, memo.ifBlank { null })
+        }
+    }
+
+    fun deleteRecord(record: ScoreRecord) {
+        viewModelScope.launch {
+            repo.delete(record)
+            val date = LocalDate.parse(record.date)
+            loadMonthlySummary(YearMonth.from(date))
         }
     }
 
@@ -80,10 +82,6 @@ class ScoresViewModel @Inject constructor(
             val yearMonth = YearMonth.from(date)
             loadMonthlySummary(yearMonth)
         }
-    }
-
-    fun saveToday(score: Int) {
-        save(score, LocalDate.now())
     }
 
     fun changeMonth(amount: Long) {

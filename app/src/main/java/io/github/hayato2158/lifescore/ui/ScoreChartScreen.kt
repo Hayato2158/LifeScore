@@ -252,7 +252,7 @@ fun MonthlyScoreChartScreen(
                         // Scoreデータをプロット
                         val path = Path()
                         if (parsed.isNotEmpty()) {
-                            parsed.forEachIndexed { index, (date, score, memo) ->
+                            parsed.forEachIndexed { index, (date, score) ->
                                 val dayRatio =
                                     (date.dayOfMonth - 1).toFloat() / (daysInMonth - 1).coerceAtLeast(
                                         1
@@ -268,7 +268,7 @@ fun MonthlyScoreChartScreen(
                                 }
                                 drawCircle(
                                     color = primaryColor,
-                                    radius = 4.dp.toPx(),
+                                    radius = 4.5.dp.toPx(),
                                     center = Offset(x, y)
                                 )
                             }
@@ -300,7 +300,7 @@ fun MonthlyScoreChartScreen(
                                     text = "メモ",
                                     style = MaterialTheme.typography.titleMedium
                                 )
-                                androidx.compose.foundation.layout.Spacer(Modifier.weight(1f))
+                                Spacer(Modifier.weight(1f))
                                 IconButton(onClick = { selectedMemo = null }) {
                                     Icon(
                                         imageVector = Icons.Outlined.Close,

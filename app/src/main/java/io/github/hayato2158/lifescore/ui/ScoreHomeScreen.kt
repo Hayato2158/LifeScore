@@ -64,7 +64,8 @@ fun ScoreHomeScreen(
     onNextMonth: () -> Unit,
     modifier: Modifier = Modifier,
     onRecordMemoChange: (ScoreRecord, String) -> Unit,
-    onShowChart: () -> Unit
+    onShowChart: () -> Unit,
+    onDeleteRecord: (ScoreRecord) -> Unit
 ) {
     var editingRecord by remember { mutableStateOf<ScoreRecord?>(null) }
     var editingMemo by remember { mutableStateOf("") }
@@ -178,10 +179,17 @@ fun ScoreHomeScreen(
                         )
                     },
                     confirmButton = {
-                        TextButton(onClick = {
-                            editingRecord?.let { onRecordMemoChange(it, editingMemo) }
-                            editingRecord = null
-                        }) { Text("保存") }
+                        Row {
+                            TextButton(onClick = {
+                                editingRecord?.let {
+                                    onRecordMemoChange(it, editingMemo) }
+                                editingRecord = null
+                            }) { Text("保存") }
+                            TextButton(onClick = {
+                                editingRecord?.let { onDeleteRecord(it) }
+                                editingRecord = null
+                            }) { Text("削除") }
+                        }
                     },
                     dismissButton = {
                         TextButton(onClick = { editingRecord = null }) { Text("キャンセル") }
@@ -286,7 +294,7 @@ fun ScoreRecordItem(record: ScoreRecord, onClick: (ScoreRecord) -> Unit, modifie
             }
             if (!record.memo.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = record.memo ?: "", style = MaterialTheme.typography.bodyMedium)
+                Text(text = record.memo, style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

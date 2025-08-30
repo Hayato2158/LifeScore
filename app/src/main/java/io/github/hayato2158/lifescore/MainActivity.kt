@@ -30,13 +30,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             // ViewModelから各Stateを収集
-            val allScores by vm.allScores.collectAsState()
             val currentMonthScores by vm.currentMonthScores.collectAsState()
             val formattedYearMonth by vm.formattedYearMonth.collectAsState()
             val monthlySummary by vm.monthlySummary.collectAsState()
-            val currentMemo by vm.currentMemo.collectAsState()
             val currentYearMonth by vm.currentYearMonth.collectAsState()
-
 
             MaterialTheme {
                 Surface {
@@ -62,7 +59,8 @@ class MainActivity : ComponentActivity() {
                             onPreviousMonth = { vm.changeMonth(-1) },
                             onNextMonth = { vm.changeMonth(1) },
                             onRecordMemoChange = vm::updateRecordMemo,
-                            onShowChart = { showChart = true }
+                            onShowChart = { showChart = true },
+                            onDeleteRecord = vm::deleteRecord
                         )
                     }
                 }
@@ -92,7 +90,8 @@ fun PreviewScoreHome() {
             onPreviousMonth = {},
             onNextMonth = {},
             onRecordMemoChange = { _, _ -> },
-            onShowChart = {}
+            onShowChart = {},
+            onDeleteRecord = {}
         )
     }
 }

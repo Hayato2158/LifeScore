@@ -34,6 +34,10 @@ class ScoreRepository @Inject constructor(
         scoreDao.upsert(record.copy(memo = memo))
     }
 
+    suspend fun delete(record: ScoreRecord) {
+        scoreDao.delete(record)
+    }
+
     // 新しく追加するメソッド
     suspend fun getMonthlySummary(yearMonth: YearMonth): MonthlySummary {
         return withContext(Dispatchers.IO) { // IOスレッドでDBアクセス
